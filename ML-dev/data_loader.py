@@ -1,8 +1,8 @@
 from pathlib import Path
 import numpy as np
 
-import dlib
-import MTCNN
+# import dlib
+# import MTCNN
 import torch
 from PIL import Image
 from torch.utils.data import Dataset
@@ -47,7 +47,7 @@ class MaskDataset(Dataset):
         self.filenames = filenames
         self.transform = transform
         self.image_size = output_image_size
-        self.face_detector = dlib.get_frontal_face_detector()
+        # self.face_detector = dlib.get_frontal_face_detector()
         # self.face_detector = MTCNN
     
     def __len__(self):

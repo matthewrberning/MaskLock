@@ -18,7 +18,7 @@ def trainable_params(model):
     return params_to_update
 
 
-def create_model(use_hidden_layer, dropout):
+def create_model(dropout=0.5):
     model = models.resnet18(pretrained=True)
 
     #freeze pre-trained layers?
@@ -39,6 +39,6 @@ def create_model(use_hidden_layer, dropout):
 
     print(model)
 
-    model = model.cuda()
+    # model = model.cuda()
     return model
 
