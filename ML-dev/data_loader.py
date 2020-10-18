@@ -3,6 +3,7 @@ import numpy as np
 
 # import dlib
 # import MTCNN
+from mtcnn.mtcnn import MTCNN
 import torch
 from PIL import Image
 from torch.utils.data import Dataset
@@ -48,7 +49,7 @@ class MaskDataset(Dataset):
         self.transform = transform
         self.image_size = output_image_size
         # self.face_detector = dlib.get_frontal_face_detector()
-        # self.face_detector = MTCNN
+        self.face_detector = MTCNN()
     
     def __len__(self):
         return len(self.filenames)
@@ -63,6 +64,7 @@ class MaskDataset(Dataset):
 
         image = load_image_and_preprocess(filename, self.image_size, self.face_detector)
         if image is None:
+            print("\n\nNONE")
             image = []
     
         
@@ -77,16 +79,16 @@ class MaskDataset(Dataset):
     
 
 def create_dataloaders(dataset_path, batch_size):
-    transforms = get_transforms()
+    train_transforms, val_transforms = get_transforms()
 
-    train_dl = _create_dataloader(f"./{dataset_path}/train/", batch_size=batch_size, transformations=transforms)
+    train_dl = _create_dataloader(f"{dataset_path}train/", batch_size=batch_size, transformations=train_transforms, mode="train")
 
-    val_dl = _create_dataloader(f"./{dataset_path}/val/", batch_size=batch_size, transformations=transforms)
+    val_dl = _create_dataloader(f"{dataset_path}val/", batch_size=batch_size, transformations=val_transforms, mode="val")
 
     return train_dl, val_dl
 
 
-def _create_dataloader(file_paths, batch_size, transformations):
+def _create_dataloader(file_paths, batch_size, transformations, mode):
 
     if not isinstance(file_paths, list):
         file_paths = [file_paths]
@@ -95,8 +97,8 @@ def _create_dataloader(file_paths, batch_size, transformations):
     for file_path in file_paths:
         data_path = Path(file_path)
     
-        mask_filenames = _find_filenames(data_path / '/mask/', '*.png')
-        no_mask_filenames = _find_filenames(data_path / '/no_mask/', '*.png')
+        mask_filenames = _find_filenames(data_path / 'mask/', '*.png')
+        no_mask_filenames = _find_filenames(data_path / 'no_mask/', '*.png')
         
         filenames += mask_filenames
         filenames += no_mask_filenames
