@@ -7,22 +7,25 @@ from pathlib import Path
 
 def load_image_and_preprocess(image_filename, output_image_size, face_detector, face_detector_type="frontal"):
     # read in image with cv2
+
     image_raw = cv2.imread(image_filename)
 
     #this might not be needed to correct for color space
-    image = cv2.cvtColor(image_raw, cv2.COLOR_BGR2RGB) 
+    image = cv2.cvtColor(image_raw, cv2.COLOR_BGR2RGB)
     
 
     # #use first face detected and check if there were none
-    result = face_detector.detect_faces(image_raw)
+    result = face_detector.detect(image_raw)
+   ## cv2.imshow(image_raw)
+    # print(str(image_filename) +" >> " + str(type(result)) + ":" + str(result))
 
-    if len(result) == 0 or len(result) > 1:
-        # print("TOO MANY FACES!!! ..or not enough!? :O")
-        # sys.exit(0)
-        return None
+    # if len(result) == 0 or len(result) > 1:
+    #     # print("TOO MANY FACES!!! ..or not enough!? :O")
+    #     # sys.exit(0)
+    #     return None
 
-    bounding_box = result[0]["box"]
-
+    # bounding_box = result[0]["box"]
+    bounding_box = result[0][0]
     #collect image height and width
     height, width = image.shape[:2]
 

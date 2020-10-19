@@ -3,12 +3,13 @@ import numpy as np
 
 # import dlib
 # import MTCNN
-from mtcnn.mtcnn import MTCNN
+
 import torch
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
 from torch.utils.data import DataLoader
+from facenet_pytorch import MTCNN
 
 
 from utils import load_image_and_preprocess
@@ -49,7 +50,8 @@ class MaskDataset(Dataset):
         self.transform = transform
         self.image_size = output_image_size
         # self.face_detector = dlib.get_frontal_face_detector()
-        self.face_detector = MTCNN()
+         # three steps's threshold
+        self.face_detector = MTCNN(keep_all=True,  thresholds=[0.0, 0.0, 0.0])
     
     def __len__(self):
         return len(self.filenames)
@@ -61,7 +63,7 @@ class MaskDataset(Dataset):
 
         #set labes for images mask vs. no-mask
         label = 1 if 'mask' in filename.split('/') else 0
-
+        # print(str(filename) + str(self.image_size) + str(self.face_detector))
         image = load_image_and_preprocess(filename, self.image_size, self.face_detector)
         if image is None:
             print("\n\nNONE")

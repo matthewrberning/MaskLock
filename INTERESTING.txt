@@ -1,0 +1,20 @@
+https://iopscience.iop.org/article/10.1088/1742-6596/1518/1/012066/pdf
+
+
+pip install tensorflow
+
+conda install -c conda-forge tensorboard
+
+x - conda install pytorch torchvision cudatoolkit=10.2 -c pytorch
+v pip install torch===1.6.0 torchvision===0.7.0 -f https://download.pytorch.org/whl/torch_stable.html
+pip install facenet-pytorch
+
+
+conda install CV2
+
+
+SCIKIT LEARN
+
+TDDM
+
+

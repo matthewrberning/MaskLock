@@ -92,42 +92,42 @@ def train_one_epoch(epoch, model, train_dl, max_lr, optimizer, criterion, writer
     writer.add_scalar(tag='Accuracy/train_accs', scalar_value=train_accs, global_step=epoch)
     
     print(f'\nEpoch {epoch}: train loss={train_losses:.4f} | train acc={train_accs:.4f}')
-    
+
 def validate(epoch, model, val_dl, criterion, writer, device):
     #set model to evaluation mode
     model.eval()
 
-    #set vars for metrics tracking 
+    #set vars for metrics tracking
     val_loss = 0
     correct_count = 0
     total = 0
-    
+
     all_labels = []
     all_predictions = []
-    
+
     for data in val_dl:
         #collect data
         inputs = data['image']
         labels = data['label'].view(-1)
-        
+
         #send to device
         # inputs = inputs.cuda(device=0)  # .type()
         # labels = labels.cuda(device=0)
         inputs = inputs.to(device)
         labels = labels.to(device)
 
-        
+
         with torch.no_grad():
             outputs = model(inputs)
             _, predicted = torch.max(outputs.data, 1)
-            
+
             total += labels.size(0)
             correct_count += (predicted == labels).sum().item()
             val_loss += criterion(outputs, labels)
-            
+
         all_labels.append(labels.cpu().numpy())
         all_predictions.append(predicted.cpu().numpy())
-    
+
     #calculate metrics
     all_labels = np.concatenate(all_labels, axis=0)
     all_predictions = np.concatenate(all_predictions, axis=0)
@@ -143,7 +143,7 @@ def validate(epoch, model, val_dl, criterion, writer, device):
     #tensorboard|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     writer.add_scalar(tag='Loss/val_loss', scalar_value=val_losses, global_step=epoch)
     writer.add_scalar(tag='Accuracy/val_accs', scalar_value=val_acc, global_step=epoch)
-    
+
 
     print(f'\t val loss={val_losses:.4f} | val acc={val_acc:.4f} | ')
     #Change this back when ROC is fixed
@@ -151,7 +151,7 @@ def validate(epoch, model, val_dl, criterion, writer, device):
     #   f'val ROC={val_roc:.4f}')
 
     return val_acc
-        
+
 
 def train(model_name, n_epochs, lr, batch_size, dataset_path):
 
@@ -187,7 +187,7 @@ def train(model_name, n_epochs, lr, batch_size, dataset_path):
 
     #send model to device
     model = model.to(device)
-    
+
 
     print('Training start..')
 
@@ -196,10 +196,10 @@ def train(model_name, n_epochs, lr, batch_size, dataset_path):
 
     #set best metric for training run to zero
     best_metric = 0.
-    
+
     os.makedirs('./checkpoints/', exist_ok=True)
 
-    
+
     for epoch in range(n_epochs):
 
         print(f"\nSTARTING EPOCH: {epoch} OF: {n_epochs}\n")
@@ -209,13 +209,13 @@ def train(model_name, n_epochs, lr, batch_size, dataset_path):
 
         #send to validation step and return validation accuracy
         selection_metric = validate(epoch, model, val_dl, criterion, writer=writer, device=device)
-            
+
         if selection_metric >= best_metric:
             print(f'\n=================\n\n>>> Saving best model metric={selection_metric:.4f} compared to previous best {best_metric:.4f}\n\n\n=================')
             checkpoint = {'model': model,
                           'state_dict': model.state_dict(),
                           'optimizer': optimizer.state_dict()}
-            
+
             torch.save(checkpoint, f'checkpoints/{current_time}--best_model.pth')
             best_metric = selection_metric
 
@@ -259,7 +259,7 @@ if __name__ == '__main__':
     learning_rate = 5.0e-5
 
     # path = "./dataset/" #must have sub folders for val and train with the classes within seperate directories
-    path = "C:/Users/OI/Desktop/data/GWU/GWU_2020_FALL_CSCI6011_PROJECT/dataset/"
+    path = "E:/One Drive/OneDrive/Mainproject/dataset/"
 
     #pass to training fucntion
     train(model_name=args.model_name, n_epochs=args.num_epochs, lr=learning_rate, batch_size=args.batch_size, dataset_path=path)
