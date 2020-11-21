@@ -15,7 +15,7 @@ def load_image_and_preprocess(image_filename, output_image_size, face_detector, 
     
 
     # #use first face detected and check if there were none
-    result = face_detector.detect(image_raw)
+    boxes, confidence = face_detector.detect(image_raw)
    ## cv2.imshow(image_raw)
     # print(str(image_filename) +" >> " + str(type(result)) + ":" + str(result))
 
@@ -23,6 +23,9 @@ def load_image_and_preprocess(image_filename, output_image_size, face_detector, 
     #     # print("TOO MANY FACES!!! ..or not enough!? :O")
     #     # sys.exit(0)
     #     return None
+
+    if len(boxes) == 0:
+        return None
 
     # bounding_box = result[0]["box"]
     bounding_box = result[0][0]
@@ -35,8 +38,8 @@ def load_image_and_preprocess(image_filename, output_image_size, face_detector, 
     #collect coordinates of bounding box
     x1 = bounding_box[0] #dib face.left
     y1 = bounding_box[1] #dib face.top
-    x2 = bounding_box[0]+bounding_box[2] #dib face.right
-    y2 = bounding_box[1]+bounding_box[3] #dib face.bottom
+    x2 = bounding_box[2] #dib face.right
+    y2 = bounding_box[3] #dib face.bottom
 
     #scale bounding box?
     size_bb = int(max(x2 - x1, y2 - y1) * scale)
