@@ -1,0 +1,7 @@
+﻿Mainprogram.obj : error LNK2019: unresolved external symbol usb_relay_init referenced in function main
+Mainprogram.obj : error LNK2019: unresolved external symbol usb_relay_device_enumerate referenced in function "void __cdecl relaycontrols::`dynamic initializer for 'listofrelaydevices''(void)" (??__Elistofrelaydevices@relaycontrols@@YAXXZ)
+Mainprogram.obj : error LNK2019: unresolved external symbol usb_relay_device_open referenced in function "void __cdecl relaycontrols::openallrelays(int)" (?openallrelays@relaycontrols@@YAXH@Z)
+Mainprogram.obj : error LNK2019: unresolved external symbol usb_relay_device_open_all_relay_channel referenced in function "void __cdecl relaycontrols::openallrelays(int)" (?openallrelays@relaycontrols@@YAXH@Z)
+Mainprogram.obj : error LNK2019: unresolved external symbol usb_relay_device_close_all_relay_channel referenced in function "void __cdecl relaycontrols::openallrelays(int)" (?openallrelays@relaycontrols@@YAXH@Z)
+usb_relay_device.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+E:\One Drive\OneDrive\Mainproject\C++ Relay development\x64\Debug\C++ Relay development.exe : fatal error LNK1120: 5 unresolved externals
