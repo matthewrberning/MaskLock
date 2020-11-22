@@ -24,11 +24,12 @@ def load_image_and_preprocess(image_filename, output_image_size, face_detector, 
     #     # sys.exit(0)
     #     return None
 
-    if len(boxes) == 0:
+    if boxes is None:
         return None
 
+
     # bounding_box = result[0]["box"]
-    bounding_box = result[0][0]
+    bounding_box = boxes[0]
     #collect image height and width
     height, width = image.shape[:2]
 
@@ -58,6 +59,7 @@ def load_image_and_preprocess(image_filename, output_image_size, face_detector, 
 
     resized_image = cv2.resize(cropped_face, (output_image_size, output_image_size))
     return resized_image
+
 
 
 

@@ -237,7 +237,7 @@ def get_args():
     parser.add_argument('--num_epochs', type=int, default=5, required=False,
                         help='specify the number of epochs')
     #/////////////////////////////////testing defaults -> CHANGE THESE
-    parser.add_argument('--batch_size', type=int, default=2, required=False,
+    parser.add_argument('--batch_size', type=int, default=32, required=False,
                         help='specify the batch size')
 
     parser.add_argument('--verbose', '--v', type=bool, default=False, required=False,
@@ -258,8 +258,7 @@ if __name__ == '__main__':
 
     learning_rate = 5.0e-5
 
-    # path = "./dataset/" #must have sub folders for val and train with the classes within seperate directories
-    path = "C:/Users/OI/Desktop/data/GWU/GWU_2020_FALL_CSCI6011_PROJECT/dataset/"
+    path = "E:/One Drive/OneDrive/Mainproject/MaskLockData/dataset/"
 
     #pass to training fucntion
     train(model_name=args.model_name, n_epochs=args.num_epochs, lr=learning_rate, batch_size=args.batch_size, dataset_path=path)
