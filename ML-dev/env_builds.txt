@@ -1,0 +1,29 @@
+installation order:
+
+tensorflow: conda install -c conda-forge tensorflow
+
+tensorboard: conda install -c conda-forge tensorboard
+
+failed   - tensorflow -> python[version='3.5.*|3.6.*|>=3.5,<3.6.0a0|>=3.6,<3.7.0a0|>=3.7,<3.8.0a0|3.7.*']
+
+trying again
+first: conda update -n base -c defaults conda
+
+masklock37_
+
+tensorflow: conda install -c conda-forge/label/cf201901 tensorflow
+
+tensorboard: conda install -c conda-forge tensorboard
+
+pytorch: conda install pytorch torchvision torchaudio cpuonly -c pytorch
+
+facenet-pytorch: pip install facenet-pytorch
+
+cv2: conda install -c conda-forge opencv
+
+tqdm: conda install -c conda-forge tqdm
+
+pillow: conda install -c conda-forge pillow
+
+scikit-learn: conda install scikit-learn
+
