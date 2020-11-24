@@ -66,7 +66,7 @@ class MaskDataset(Dataset):
         # print(str(filename) + str(self.image_size) + str(self.face_detector))
         image = load_image_and_preprocess(filename, self.image_size, self.face_detector)
         if image is None:
-            print("\n\nNONE", filename)
+            # print("\n\nNONE", filename)
             image = []
     
         
