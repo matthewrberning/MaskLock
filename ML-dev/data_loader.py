@@ -28,12 +28,12 @@ def get_transforms():
     pre_trained_mean, pre_trained_std = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
     
     train_transforms = transforms.Compose([
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomAffine(degrees=40, scale=(.9, 1.1), shear=0),
-        transforms.RandomPerspective(distortion_scale=0.2),
-        transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
+        # transforms.RandomHorizontalFlip(),
+        # transforms.RandomAffine(degrees=40, scale=(.9, 1.1), shear=0),
+        # transforms.RandomPerspective(distortion_scale=0.2),
+        # transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
         transforms.ToTensor(),
-        transforms.RandomErasing(scale=(0.02, 0.16), ratio=(0.3, 1.6)),
+        # transforms.RandomErasing(scale=(0.02, 0.16), ratio=(0.3, 1.6)),
         transforms.Normalize(mean=pre_trained_mean, std=pre_trained_std),
     ])
     

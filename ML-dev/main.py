@@ -51,10 +51,10 @@ def train_one_epoch(epoch, model, train_dl, max_lr, optimizer, criterion, writer
         labels = data['label'].view(-1)
         
         #send to device
-        # inputs = inputs.cuda(device=0)
-        # labels = labels.cuda(device=0)
-        inputs = inputs.to(device)
-        labels = labels.to(device)
+        inputs = inputs.cuda(device=0)
+        labels = labels.cuda(device=0)
+        # inputs = inputs.to(device)
+        # labels = labels.to(device)
         
         #reset grads to zero at the begining of each mini-batch
         optimizer.zero_grad()
@@ -113,8 +113,10 @@ def validate(epoch, model, val_dl, criterion, writer, device):
         #send to device
         # inputs = inputs.cuda(device=0)  # .type()
         # labels = labels.cuda(device=0)
-        inputs = inputs.to(device)
-        labels = labels.to(device)
+        # inputs = inputs.to(device)
+        # labels = labels.to(device)
+        inputs = inputs.cuda(device=0) 
+        labels = labels.cuda(device=0)
 
 
         with torch.no_grad():
@@ -165,7 +167,7 @@ def train(model_name, n_epochs, lr, batch_size, dataset_path):
     # set device
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    print(device)
+    print("...device being used: ",device)
 
     print('...building dataset')
     #make the dataloaders
