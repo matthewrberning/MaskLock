@@ -45,13 +45,14 @@ def get_transforms():
 
 
 class MaskDataset(Dataset):
-    def __init__(self, filenames, transform, output_image_size=224):
+    def __init__(self, filenames, transform, device, output_image_size=224):
         self.filenames = filenames
         self.transform = transform
         self.image_size = output_image_size
+        self.device = device
         # self.face_detector = dlib.get_frontal_face_detector()
          # three steps's threshold
-        self.face_detector = MTCNN(keep_all=True,  thresholds=[0.57, 0.68, 0.68])
+        self.face_detector = MTCNN(keep_all=True,  thresholds=[0.57, 0.68, 0.68], device=self.device)
     
     def __len__(self):
         return len(self.filenames)
@@ -80,17 +81,17 @@ class MaskDataset(Dataset):
         return {'image': image, 'label': label, 'filename': filename}
     
 
-def create_dataloaders(dataset_path, batch_size):
+def create_dataloaders(dataset_path, batch_size, device):
     train_transforms, val_transforms = get_transforms()
 
-    train_dl = _create_dataloader(f"{dataset_path}train/", batch_size=batch_size, transformations=train_transforms, mode="train")
+    train_dl = _create_dataloader(f"{dataset_path}train/", batch_size=batch_size, transformations=train_transforms, mode="train", device=device)
 
-    val_dl = _create_dataloader(f"{dataset_path}val/", batch_size=batch_size, transformations=val_transforms, mode="val")
+    val_dl = _create_dataloader(f"{dataset_path}val/", batch_size=batch_size, transformations=val_transforms, mode="val", device=device)
 
     return train_dl, val_dl
 
 
-def _create_dataloader(file_paths, batch_size, transformations, mode):
+def _create_dataloader(file_paths, batch_size, transformations, mode, device):
 
     if not isinstance(file_paths, list):
         file_paths = [file_paths]
@@ -108,7 +109,7 @@ def _create_dataloader(file_paths, batch_size, transformations, mode):
     assert len(filenames) != 0, f'filenames are empty {filenames}'
     np.random.shuffle(filenames)
     
-    ds = MaskDataset(filenames, transform=transformations)
+    ds = MaskDataset(filenames, transform=transformations, device=device)
     dl = DataLoader(ds, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
     
     print(f"{mode} data: {len(ds)}")

@@ -165,10 +165,12 @@ def train(model_name, n_epochs, lr, batch_size, dataset_path):
     # set device
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+    print(device)
+
     print('...building dataset')
     #make the dataloaders
     #//////////////////////////////////////////////////////////////////////////WORK ON DATALOADER
-    train_dl, val_dl = create_dataloaders(dataset_path, batch_size)
+    train_dl, val_dl = create_dataloaders(dataset_path, batch_size, device)
 
     print('...assembling model')
     #set up the loss fucntion
