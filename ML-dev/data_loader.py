@@ -51,7 +51,7 @@ class MaskDataset(Dataset):
         self.image_size = output_image_size
         # self.face_detector = dlib.get_frontal_face_detector()
          # three steps's threshold
-        self.face_detector = MTCNN(keep_all=True,  thresholds=[0.7, 0.6, 0.4])
+        self.face_detector = MTCNN(keep_all=True,  thresholds=[0.57, 0.68, 0.68])
     
     def __len__(self):
         return len(self.filenames)

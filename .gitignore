@@ -1,0 +1,7 @@
+# See https://docs.github.com/en/free-pro-team@latest/github/using-git/ignoring-files for more about ignoring files
+
+# ignoring __pycache__
+/ML-dev/__pycache__/
+
+#ignoring .ipynb_checkpoints
+/ML-dev/.ipynb_checkpoints/

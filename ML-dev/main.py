@@ -234,7 +234,7 @@ def get_args():
     parser.add_argument('--model_name', type=str, default='resnet18', required=False,
                         help='specify the model name')
     #/////////////////////////////////testing defaults -> CHANGE THESE
-    parser.add_argument('--num_epochs', type=int, default=5, required=False,
+    parser.add_argument('--num_epochs', type=int, default=20, required=False,
                         help='specify the number of epochs')
     #/////////////////////////////////testing defaults -> CHANGE THESE
     parser.add_argument('--batch_size', type=int, default=32, required=False,
