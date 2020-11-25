@@ -110,7 +110,7 @@ def _create_dataloader(file_paths, batch_size, transformations, mode, device):
     np.random.shuffle(filenames)
     
     ds = MaskDataset(filenames, transform=transformations, device=device)
-    # dl = DataLoader(ds, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
+    dl = DataLoader(ds, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
     #///////////////////////////////
 
     # print(ds)
