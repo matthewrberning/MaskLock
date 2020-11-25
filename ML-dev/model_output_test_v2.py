@@ -9,7 +9,7 @@
 
 
 
-# In[72]:
+# In[1]:
 
 
 #imports
@@ -24,15 +24,16 @@ import torchvision.models as models
 import torch.nn as nn
 
 
-# In[ ]:
+# In[2]:
 
 
-
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+print(device)
 
 
 # ### this part is preliminary: using it to simulate a face coming from MTCNN and scaled to fit 224x224
 
-# In[73]:
+# In[3]:
 
 
 
@@ -80,7 +81,7 @@ def load_image(img_path, output_image_size, face_detector):
     return resized_image
 
 
-# In[ ]:
+# In[4]:
 
 
 #set up MTCNN
@@ -94,7 +95,7 @@ mtcnn = MTCNN(keep_all=True, device=device,min_face_size = minsize,thresholds= t
 
 # ### This part takes in a model checkpoint file and an already processed image (224x224, face pulled out by MTCNN)
 
-# In[77]:
+# In[8]:
 
 
 
@@ -157,7 +158,7 @@ def process_image_through_model(input_image_of_face, model, composed_transforms)
     
     print("classes: Mask=1, No_Mask=0")
     
-    print("predicted class: ", predicted.numpy()[0])
+    print("predicted class: ", predicted_class.numpy()[0])
     
     return predicted_class
     
@@ -175,7 +176,7 @@ def process_image_through_model(input_image_of_face, model, composed_transforms)
 
 
 
-# In[78]:
+# In[9]:
 
 
 #get the checkpoint path
@@ -193,4 +194,10 @@ transform = gettransforms()
 
 #get output from the model
 process_image_through_model(resized_image_of_face, model, transform)
+
+
+# In[ ]:
+
+
+
 
