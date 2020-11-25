@@ -52,7 +52,7 @@ class MaskDataset(Dataset):
         self.device = device
         # self.face_detector = dlib.get_frontal_face_detector()
          # three steps's threshold
-        self.face_detector = MTCNN(keep_all=True,  thresholds=[0.57, 0.68, 0.68], device=self.device)
+        self.face_detector = MTCNN(keep_all=True,  thresholds=[0.4, 0.6, 0.6], device=self.device)
     
     def __len__(self):
         return len(self.filenames)
@@ -114,7 +114,7 @@ def _create_dataloader(file_paths, batch_size, transformations, mode, device):
     #///////////////////////////////
 
     # print(ds)
-    
+
     # target = ds.train_labels
     # class_sample_count = np.unique(target, return_counts=True)[1]
     # print("class_sample_count -------->  ",class_sample_count)

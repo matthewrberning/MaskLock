@@ -115,7 +115,7 @@ def validate(epoch, model, val_dl, criterion, writer, device):
     #///////////////////////
     for step, data in enumerate(progress_bar):
     #//////////////////////
-    
+
         #collect data
         inputs = data['image']
         labels = data['label'].view(-1)
@@ -270,7 +270,7 @@ if __name__ == '__main__':
 
     print(f"\n\nTRAINING MODEL\nmodel name: {args.model_name}\nnumber of epochs: {args.num_epochs}\nbatch size:{args.batch_size}")
 
-    learning_rate = 5.0e-5
+    learning_rate = 5.0e-6
 
     path = "E:/One Drive/OneDrive/Mainproject/MaskLockData/dataset/"
 
