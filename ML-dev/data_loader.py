@@ -112,6 +112,9 @@ def _create_dataloader(file_paths, batch_size, transformations, mode, device):
     ds = MaskDataset(filenames, transform=transformations, device=device)
     # dl = DataLoader(ds, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
     #///////////////////////////////
+
+    print(ds)
+    
     target = ds.train_labels
     class_sample_count = np.unique(target, return_counts=True)[1]
     print("class_sample_count -------->  ",class_sample_count)
