@@ -28,9 +28,9 @@ def get_transforms():
     pre_trained_mean, pre_trained_std = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
     
     train_transforms = transforms.Compose([
-        # transforms.RandomHorizontalFlip(),
+        transforms.RandomHorizontalFlip(),
         # transforms.RandomAffine(degrees=40, scale=(.9, 1.1), shear=0),
-        # transforms.RandomPerspective(distortion_scale=0.2),
+        transforms.RandomPerspective(distortion_scale=0.2),
         # transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
         transforms.ToTensor(),
         # transforms.RandomErasing(scale=(0.02, 0.16), ratio=(0.3, 1.6)),
@@ -113,20 +113,20 @@ def _create_dataloader(file_paths, batch_size, transformations, mode, device):
     # dl = DataLoader(ds, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
     #///////////////////////////////
 
-    print(ds)
+    # print(ds)
     
-    target = ds.train_labels
-    class_sample_count = np.unique(target, return_counts=True)[1]
-    print("class_sample_count -------->  ",class_sample_count)
+    # target = ds.train_labels
+    # class_sample_count = np.unique(target, return_counts=True)[1]
+    # print("class_sample_count -------->  ",class_sample_count)
 
-    weight = 1. / class_sample_count
-    samples_weight = weight[target]
+    # weight = 1. / class_sample_count
+    # samples_weight = weight[target]
 
-    print("samples_weight -------->  ",samples_weight)
-    samples_weight = torch.from_numpy(samples_weight)
-    sampler = WeightedRandomSampler(samples_weight, len(samples_weight))
+    # print("samples_weight -------->  ",samples_weight)
+    # samples_weight = torch.from_numpy(samples_weight)
+    # sampler = WeightedRandomSampler(samples_weight, len(samples_weight))
 
-    dl = DataLoader(ds, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
+    # dl = DataLoader(ds, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
     #///////////////////////////////
     
     print(f"{mode} data: {len(ds)}")
