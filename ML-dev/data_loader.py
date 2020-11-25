@@ -110,7 +110,21 @@ def _create_dataloader(file_paths, batch_size, transformations, mode, device):
     np.random.shuffle(filenames)
     
     ds = MaskDataset(filenames, transform=transformations, device=device)
+    # dl = DataLoader(ds, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
+    #///////////////////////////////
+    target = ds.train_labels
+    class_sample_count = np.unique(target, return_counts=True)[1]
+    print("class_sample_count -------->  ",class_sample_count)
+
+    weight = 1. / class_sample_count
+    samples_weight = weight[target]
+
+    print("samples_weight -------->  ",samples_weight)
+    samples_weight = torch.from_numpy(samples_weight)
+    sampler = WeightedRandomSampler(samples_weight, len(samples_weight))
+
     dl = DataLoader(ds, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
+    #///////////////////////////////
     
     print(f"{mode} data: {len(ds)}")
     

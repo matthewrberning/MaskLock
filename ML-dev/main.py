@@ -105,7 +105,17 @@ def validate(epoch, model, val_dl, criterion, writer, device):
     all_labels = []
     all_predictions = []
 
-    for data in val_dl:
+    #////////////////////////
+    #setup progressbar and dl
+    progress_bar = tqdm(val_dl, total=int(len(val_dl)), desc='Validation Epoch')
+    #/////////////////////////
+
+    # for data in val_dl:
+
+    #///////////////////////
+    for step, data in enumerate(progress_bar):
+    #//////////////////////
+    
         #collect data
         inputs = data['image']
         labels = data['label'].view(-1)
