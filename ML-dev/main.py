@@ -138,7 +138,7 @@ def validate(epoch, model, val_dl, criterion, writer, device):
         writer.add_scalar(tag='ROC-AUC/val_roc', scalar_value=val_roc, global_step=epoch)
     except:
         print("roc screwed up")
-    pass
+        pass
     val_acc = correct_count / total
     val_losses = val_loss / len(val_dl)
 
