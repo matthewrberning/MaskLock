@@ -270,7 +270,7 @@ if __name__ == '__main__':
 
     print(f"\n\nTRAINING MODEL\nmodel name: {args.model_name}\nnumber of epochs: {args.num_epochs}\nbatch size:{args.batch_size}")
 
-    learning_rate = 1.0e-4
+    learning_rate = 1.0e-5
 
     path = "E:/One Drive/OneDrive/Mainproject/MaskLockData/dataset/"
 
