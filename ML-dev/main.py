@@ -8,7 +8,10 @@ import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
 from PIL import Image
 
-from data_loader import create_dataloaders
+# from data_loader import create_dataloaders
+#//////////////////////////////////////////
+from _data_loader import build_dataloaders
+
 from _model import trainable_params, create_model, print_model_params
 
 #metrics
@@ -182,14 +185,15 @@ def train(model_name, n_epochs, lr, batch_size, dataset_path, loss):
     print('...building dataset')
     #make the dataloaders
     #//////////////////////////////////////////////////////////////////////////WORK ON DATALOADER
-    train_dl, val_dl = create_dataloaders(dataset_path, batch_size, device)
+    # train_dl, val_dl = create_dataloaders(dataset_path, batch_size, device)
+    train_dl, val_dl = build_dataloaders(dataset_path, batch_size)
 
     print('...assembling model')
     #set up the loss fucntion
-    # criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss()
     # https://pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html#torch.nn.BCEWithLogitsLoss
-    weight = torch.tensor([0, 3]) #weighting for the positive class
-    criterion = nn.BCEWithLogitsLoss(pos_weight=weight)
+    # weight = torch.tensor([0, 3]) #weighting for the positive class
+    # criterion = nn.BCEWithLogitsLoss(pos_weight=weight)
 
     #pull resNet18 model with trainable layers
     if model_name == "resnet18":
@@ -275,7 +279,7 @@ if __name__ == '__main__':
 
     learning_rate = 1.0e-5
 
-    path = "E:/One Drive/OneDrive/Mainproject/MaskLockData/dataset/"
+    path = "E:/One Drive/OneDrive/Mainproject/MaskLockData/dataset2/"
 
     #pass to training fucntion
     train(model_name=args.model_name, n_epochs=args.num_epochs, lr=learning_rate, batch_size=args.batch_size, dataset_path=path)

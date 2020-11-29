@@ -5,7 +5,7 @@ import torch
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, RandomSampler
 
 import cv2
 
@@ -34,7 +34,6 @@ class MaskDataset(Dataset):
     def __init__(self, filenames, transform):
         self.filenames = filenames
         self.transform = transform
-        self.image_size = output_image_size
     
     def __len__(self):
         return len(self.filenames)
@@ -45,7 +44,11 @@ class MaskDataset(Dataset):
         filename = str(filename)
 
         #set labes for images mask vs. no-mask based upon directory affiliation
-        label = 1 if 'mask' in filename.split('/') else 0
+        # label = 1 if 'mask' in filename.split('/') else 0
+        #///////////////////////////////////////////////////////////////////////////label upsampling
+        # label = 1 if 'up_mask' in filename.split('/') else 0        
+        #this ^^^ stupid thing was writen with the wrong slash / not \ for windows? ABSOLOUTELY FRUSTRATING
+        label = 1 if 'up_mask' in filename.split('\\') else 0
 
         image = cv2.imread(filename)
         image = Image.fromarray(image)
@@ -55,29 +58,37 @@ class MaskDataset(Dataset):
         return {'image': image, 'label': label, 'filename': filename}
     
 
-def build_dataloaders(dataset_path, batch_size, device):
+def build_dataloaders(dataset_path, batch_size):
 
     #get the composed transforms for training and validation(just normalization)
     t_transforms, v_transforms = compose_transforms()
 
     #collect the files from the training set and send to dataloader/MaskDataset class
     train_filenames = get_files(f"{dataset_path}train/")
-    train_dl = DataLoader(MaskDataset(train_filenames, transform=t_transforms), batch_size=batch_size, shuffle=True)
-
+    trainset_class = MaskDataset(train_filenames, transform=t_transforms)
+    train_dl = DataLoader(trainset_class, batch_size=batch_size, sampler=RandomSampler(trainset_class), collate_fn=collate_fn)
+    
+    print("train data: ", len(trainset_class))
+    
     #collect the files from the validation set and send to dataloader/MaskDataset class
     val_filenames = get_files(f"{dataset_path}val/")
-    val_dl = DataLoader(MaskDataset(val_filenames, transform=v_transforms), batch_size=batch_size, shuffle=True)
-
+    valset_class = MaskDataset(val_filenames, transform=v_transforms)
+    val_dl = DataLoader(valset_class, batch_size=batch_size, sampler=RandomSampler(valset_class), collate_fn=collate_fn)
+    
+    print("val data: ", len(valset_class))
+    
     return train_dl, val_dl
 
-
-def get_files(dataset_path)
+def get_files(dataset_path):
     files = [] #empty list to accumulate all the image_paths
  
     data_path = Path(dataset_path) #pathify it
 
-    mask_images =  collect_files(data_path / 'mask/', '*.png') #use helper fn
+    #///////////////////////////////////////////////////////////////////////////label upsampling
+    mask_images =  collect_files(data_path / 'up_mask/', '*.png') #use helper fn
+    # mask_images =  collect_files(data_path / 'mask/', '*.png') #use helper fn
     no_mask_images = collect_files(data_path / 'no_mask/', '*.png') #use helper fn
+
     
     files += mask_images
     files += no_mask_images
