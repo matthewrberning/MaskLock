@@ -6,3 +6,6 @@
 #ignoring .ipynb_checkpoints
 /ML-dev/.ipynb_checkpoints/
 .ipynb_checkpoints/
+
+#ignoring model checkpoints
+/ML-dev/checkpoints/
