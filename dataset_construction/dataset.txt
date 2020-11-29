@@ -1,0 +1,45 @@
+The files in this directory come from the following sources:
+
+Kaggel.com:
+
+	face_mask_detection_archive.zip
+
+	url: https://www.kaggle.com/andrewmvd/face-mask-detection
+
+Kaggle.com:
+	
+	medical_mask_detection.zip
+	
+	url: https://www.kaggle.com/ivandanilovich/medical-masks-dataset-images-tfrecords
+
+
+NVIDIA (referenced dataset 'MAFA - MAsked FAces')
+	
+	MAFA-Label-Test.zip
+	MAFA-Label-Train.zip
+	MAFA-test-images.zip
+	MAFA-train-images.zip
+
+	url: https://github.com/NVIDIA-AI-IOT/face-mask-detection
+	download url: https://drive.google.com/drive/folders/1nbtM1n0--iZ3VVbNGhocxbnBGhMau_OG
+
+MaskedFace-Net (small numbers of flies due to microsoft onedrive issues)
+	
+	CMFD/
+	
+	url: https://github.com/cabani/MaskedFace-Net
+
+WiderFace
+	
+	wider_face_split.zip
+	WIDER_train.zip
+	WIDER_test.zip
+
+	url: http://shuoyang1213.me/WIDERFACE/
+
+Flicker-Faces-HQ (also Kaggle.com)
+	
+	FFHQ_archive.zip
+	
+	url: https://www.kaggle.com/arnaud58/flickrfaceshq-dataset-ffhq/version/1
+
