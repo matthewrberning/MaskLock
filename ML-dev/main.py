@@ -72,6 +72,8 @@ def train_one_epoch(epoch, model, train_dl, max_lr, optimizer, criterion, writer
             
             loss = criterion(outputs, labels)
 
+            loss.backward()
+
             optimizer.step()
 
         #tracking for roc-auc
