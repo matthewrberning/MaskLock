@@ -165,7 +165,7 @@ def validate(epoch, model, val_dl, criterion, writer, device):
     return val_acc
 
 
-def train(model_name, n_epochs, lr, batch_size, dataset_path):
+def train(model_name, n_epochs, lr, batch_size, dataset_path, loss):
 
     #get current time
     current_time = time.strftime("%Y-%m-%d-%H_%M_%S")
@@ -186,7 +186,10 @@ def train(model_name, n_epochs, lr, batch_size, dataset_path):
 
     print('...assembling model')
     #set up the loss fucntion
-    criterion = nn.CrossEntropyLoss()
+    # criterion = nn.CrossEntropyLoss()
+    # https://pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html#torch.nn.BCEWithLogitsLoss
+    weight = torch.tensor([0, 3]) #weighting for the positive class
+    criterion = nn.BCEWithLogitsLoss(pos_weight=weight)
 
     #pull resNet18 model with trainable layers
     if model_name == "resnet18":
