@@ -19,8 +19,8 @@ def trainable_params(model):
 
 
 def create_model(dropout=0.5):
-    # model = models.resnet18(pretrained=True)
-    model = models.resnet18(pretrained=False)
+    model = models.resnet18(pretrained=True)
+    # model = models.resnet18(pretrained=False)
 
     #freeze pre-trained layers?
     # for param in model.parameters():

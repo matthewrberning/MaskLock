@@ -9,6 +9,13 @@ from torch.utils.data import DataLoader, RandomSampler
 
 import cv2
 
+def collate_fn(batch):
+    imgs = [item['image'] for item in batch if item['image'] is not None]
+    targets = [item['label'] for item in batch if item['image'] is not None]
+    filenames = [item['filename'] for item in batch if item['image'] is not None]
+    imgs = torch.stack(imgs)
+    targets = torch.stack(targets)
+    return {'image': imgs, 'label': targets, 'filename': filenames}
 
 def compose_transforms():
     pre_trained_mean, pre_trained_std = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
