@@ -168,7 +168,7 @@ def validate(epoch, model, val_dl, criterion, writer, device):
     return val_acc
 
 
-def train(model_name, n_epochs, lr, batch_size, dataset_path, loss):
+def train(model_name, n_epochs, lr, batch_size, dataset_path):
 
     #get current time
     current_time = time.strftime("%Y-%m-%d-%H_%M_%S")
