@@ -36,14 +36,14 @@ def train_one_epoch(epoch, model, train_dl, max_lr, optimizer, criterion, writer
     train_loss = 0
 
     #setup progressbar and dl
-    progress_bar = tqdm(train_dl, total=int(len(train_dl)), desc='Train Epoch')
+    progress_bar = tqdm(train_dl, total=int(len(train_dl)), desc='Training Progress: ')
     
     #reset of gradients at begining of epoch
     optimizer.zero_grad()
 
     #tracking vars for roc/acc metric
     total = 0
-    correct_count = 0
+    corrects_count = 0
 
     all_labels = []
     all_predictions = []
@@ -64,39 +64,42 @@ def train_one_epoch(epoch, model, train_dl, max_lr, optimizer, criterion, writer
         with torch.set_grad_enabled(True):
             outputs = model(inputs)
             
-            _, predicted = torch.max(outputs.data, 1)
+            _, predictions = torch.max(outputs.data, 1)
             
             total += labels.size(0)
             
-            correct_count += (predicted == labels).sum().item()
+            corrects_count += (predictions == labels).sum().item()
             
             loss = criterion(outputs, labels)
 
-            loss.backward()
+            loss.backward() #backpropagating the loss
 
-            optimizer.step()
+            optimizer.step() #stepping down the gradient
 
         #tracking for roc-auc
         all_labels.append(labels.cpu().numpy())
-        all_predictions.append(predicted.cpu().numpy())
+        all_predictions.append(predictions.cpu().numpy())
         
+        #collecting the losses
         train_loss += loss.item()
                
-        progress_bar.set_postfix(loss=train_loss / (step + 1), acc=correct_count / total)
+        progress_bar.set_postfix(loss=train_loss / (step + 1), acc=corrects_count / total)
     
     train_losses = train_loss / len(train_dl)
-    train_accs = correct_count / total
+    train_accs = corrects_count / total
+
+    #generate an ROC-AUC for the trainig epoch
     try:
         train_roc = roc_auc_score(all_labels, all_predictions)
     except:
-        print("roc screwwed up")
+        print("roc screwed up")
         pass
 
     #tensorboard||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     writer.add_scalar(tag='Loss/train_losses', scalar_value=train_losses, global_step=epoch)
     writer.add_scalar(tag='Accuracy/train_accs', scalar_value=train_accs, global_step=epoch)
     
-    print(f'\nEpoch {epoch}: train loss={train_losses:.4f} | train acc={train_accs:.4f}')
+    print(f'\nEpoch {epoch}: train loss={train_losses:.4f} | train accuracy={train_accs:.4f}')
 
 def validate(epoch, model, val_dl, criterion, writer, device):
     #set model to evaluation mode
@@ -126,8 +129,7 @@ def validate(epoch, model, val_dl, criterion, writer, device):
         labels = data['label'].view(-1)
 
         #send to device
-        # inputs = inputs.cuda(device=0)  # .type()
-        # labels = labels.cuda(device=0)
+
         # inputs = inputs.to(device)
         # labels = labels.to(device)
         inputs = inputs.cuda(device=0) 
@@ -136,18 +138,20 @@ def validate(epoch, model, val_dl, criterion, writer, device):
 
         with torch.no_grad():
             outputs = model(inputs)
-            _, predicted = torch.max(outputs.data, 1)
+            _, predictions = torch.max(outputs.data, 1)
 
             total += labels.size(0)
-            correct_count += (predicted == labels).sum().item()
+            correct_count += (predictions == labels).sum().item()
             val_loss += criterion(outputs, labels)
 
         all_labels.append(labels.cpu().numpy())
-        all_predictions.append(predicted.cpu().numpy())
+        all_predictions.append(predictions.cpu().numpy())
 
     #calculate metrics
     all_labels = np.concatenate(all_labels, axis=0)
     all_predictions = np.concatenate(all_predictions, axis=0)
+
+    #calculate ROC-AUC
     try:
         val_roc = roc_auc_score(all_labels, all_predictions)
         writer.add_scalar(tag='ROC-AUC/val_roc', scalar_value=val_roc, global_step=epoch)
@@ -162,7 +166,7 @@ def validate(epoch, model, val_dl, criterion, writer, device):
     writer.add_scalar(tag='Accuracy/val_accs', scalar_value=val_acc, global_step=epoch)
 
 
-    print(f'\t val loss={val_losses:.4f} | val acc={val_acc:.4f} | ')
+    print(f'\t val loss={val_losses:.4f} | val accuracy={val_acc:.4f} | ')
     #Change this back when ROC is fixed
     # print(f'\t val loss={val_losses:.4f} | val acc={val_acc:.4f} | '
     #   f'val ROC={val_roc:.4f}')
@@ -172,9 +176,6 @@ def validate(epoch, model, val_dl, criterion, writer, device):
 
 def train(model_name, n_epochs, lr, batch_size, dataset_path):
 
-    #get current time
-    current_time = time.strftime("%Y-%m-%d-%H_%M_%S")
-
     # Fix random seed if needed
     # torch.manual_seed(30)
     # np.random.seed(30)
@@ -182,7 +183,7 @@ def train(model_name, n_epochs, lr, batch_size, dataset_path):
     # set device
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    print("...device being used: ",device)
+    print("...device being used: ", device)
 
     print('...building dataset')
     #make the dataloaders
@@ -215,6 +216,7 @@ def train(model_name, n_epochs, lr, batch_size, dataset_path):
     print('Training start..')
 
     # #tensorboard setup||||||||||||||||||||||||||||||
+    current_time = time.strftime("%Y-%m-%d-%H_%M_%S")
     writer = SummaryWriter(f'./runs/{current_time}')
 
     #set best metric for training run to zero
@@ -231,16 +233,22 @@ def train(model_name, n_epochs, lr, batch_size, dataset_path):
         train_one_epoch(epoch, model, train_dl, lr, optimizer, criterion, writer=writer, device=device)
 
         #send to validation step and return validation accuracy
-        selection_metric = validate(epoch, model, val_dl, criterion, writer=writer, device=device)
+        current_metric = validate(epoch, model, val_dl, criterion, writer=writer, device=device)
 
-        if selection_metric >= best_metric:
-            print(f'\n=================\n\n>>> Saving best model metric={selection_metric:.4f} compared to previous best {best_metric:.4f}\n\n\n=================')
+        #get current time
+        current_time = time.strftime("%Y-%m-%d-%H_%M_%S")
+
+        if current_metric >= best_metric:
+            print(f'\n\n>>>>>>>>\n\n    saving best model (Validation Accuracy: {current_metric:.4f})')
+            print(f"                      previous best Validation Accuracy: {best_metric:.4f}")
+            print(f"\n    model saved at: 'checkpoints/{current_time}--best_model.pth'\n\n>>>>>>>>\n\n")
+
             checkpoint = {'model': model,
                           'state_dict': model.state_dict(),
                           'optimizer': optimizer.state_dict()}
 
             torch.save(checkpoint, f'checkpoints/{current_time}--best_model.pth')
-            best_metric = selection_metric
+            best_metric = current_metric
 
     #close the tensorboard loggers
     writer.close()
@@ -260,7 +268,7 @@ def get_args():
     parser.add_argument('--num_epochs', type=int, default=20, required=False,
                         help='specify the number of epochs')
     #/////////////////////////////////testing defaults -> CHANGE THESE
-    parser.add_argument('--batch_size', type=int, default=32, required=False,
+    parser.add_argument('--batch_size', type=int, default=64, required=False,
                         help='specify the batch size')
 
     parser.add_argument('--verbose', '--v', type=bool, default=False, required=False,
@@ -279,7 +287,7 @@ if __name__ == '__main__':
 
     print(f"\n\nTRAINING MODEL\nmodel name: {args.model_name}\nnumber of epochs: {args.num_epochs}\nbatch size:{args.batch_size}")
 
-    learning_rate = 1.0e-5
+    learning_rate = 1.0e-6
 
     path = "E:/One Drive/OneDrive/Mainproject/MaskLockData/dataset2/"
 
