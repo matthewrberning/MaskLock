@@ -65,7 +65,7 @@ def load_model(checkpoint_path):
         nn.Linear(in_features // 2, 2)
     )
 
-    checkpoint = torch.load(checkpoint_path)
+    checkpoint = torch.load(checkpoint_path,lambda storage,loc:storage)
 
     model.load_state_dict(checkpoint['state_dict'])
 
@@ -118,8 +118,10 @@ def runmtcnnc(frames):
             ## Each of these is a detected Face. With this coordinate I will crop image to model specs.
 
             croppedimage = transposeimage(frames,244,singleface)
+
             output = process_image_through_model(croppedimage,model,transform)
             results.append(output)
+
 
         #frames.show()
 
@@ -133,9 +135,10 @@ def runmtcnnc(frames):
 timefordoor = 3
 imagefactor = 1.05
 minsize = 35  # minimum size of face
-threshold = [0.7, 0.8, 0.8]  # three steps's threshold
-learnedpath = r"C:\Users\luisc\Documents\MaskLock\ML-dev\checkpoints\2020-10-18-15_05_52--best_model.pth"""
+threshold = [0.7, 0.6, 0.6]  # three steps's threshold
+learnedpath = r"C:\Users\luisc\Documents\MaskLock\ML-dev\checkpoints\2020-11-30-15_24_14--best_model.pth"
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+print(str(device))
 mtcnn = MTCNN(keep_all=True, device=device,min_face_size = minsize,thresholds= threshold)
 model = load_model(learnedpath)
 transform = gettransforms()
