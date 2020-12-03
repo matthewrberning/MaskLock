@@ -91,6 +91,7 @@ def train_one_epoch(epoch, model, train_dl, max_lr, optimizer, criterion, writer
     #generate an ROC-AUC for the trainig epoch
     try:
         train_roc = roc_auc_score(all_labels, all_predictions)
+        writer.add_scalar(tag='ROC-AUC/train_roc', scalar_value=train_roc, global_step=epoch)
     except:
         print("roc screwed up")
         pass
@@ -268,7 +269,7 @@ def get_args():
     parser.add_argument('--num_epochs', type=int, default=20, required=False,
                         help='specify the number of epochs')
     #/////////////////////////////////testing defaults -> CHANGE THESE
-    parser.add_argument('--batch_size', type=int, default=64, required=False,
+    parser.add_argument('--batch_size', type=int, default=32, required=False,
                         help='specify the batch size')
 
     parser.add_argument('--verbose', '--v', type=bool, default=False, required=False,
